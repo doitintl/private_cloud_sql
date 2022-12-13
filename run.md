@@ -45,5 +45,10 @@ export DBPASS=[password]
 
 gcloud services enable run.googleapis.com
 
-gcloud run deploy my-service --image=us-central1-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$TAG --region=$REGION --ingress=all --max-instances=1 --set-env-vars=DBHOST=${DBHOST},DBNAME=${DBNAME},DBUSER=${DBUSER},DBPASS=${DBPASS} --vpc-connector=$CONNECTOR
+gcloud run deploy my-service \
+--image=us-central1-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$TAG \
+--region=$REGION \
+--ingress=all \
+--max-instances=1 \
+--set-env-vars=DBHOST=${DBHOST},DBNAME=${DBNAME},DBUSER=${DBUSER},DBPASS=${DBPASS} --vpc-connector=$CONNECTOR
 ```
