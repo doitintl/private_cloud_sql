@@ -39,9 +39,9 @@ gcloud compute networks vpc-access connectors create $CONNECTOR \
 --machine-type=e2-micro
 
 export DBHOST=$(gcloud sql instances describe $CLOUD_SQL --format "value(ipAddresses[0].ipAddress)")
-export DBNAME=postgres
-export DBUSER=postgres
-export DBPASS=password
+export DBNAME=[database]
+export DBUSER=[user]
+export DBPASS=[password]
 
 gcloud services enable run.googleapis.com
 
