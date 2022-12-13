@@ -50,5 +50,6 @@ gcloud run deploy my-service \
 --region=$REGION \
 --ingress=all \
 --max-instances=1 \
---set-env-vars=DBHOST=${DBHOST},DBNAME=${DBNAME},DBUSER=${DBUSER},DBPASS=${DBPASS} --vpc-connector=$CONNECTOR
+--set-env-vars=DBHOST=${DBHOST},DBNAME=${DBNAME},DBUSER=${DBUSER},DBPASS=${DBPASS} \
+--vpc-connector=$CONNECTOR
 ```
