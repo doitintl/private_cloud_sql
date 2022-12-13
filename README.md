@@ -4,3 +4,4 @@ One of the biggest vectors for security breaches is having a database with a pub
 
 
 [Accessing database from local machine with IAP](iap.md)
+[Accessing database from Cloud Run](run.md)
