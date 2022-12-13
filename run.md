@@ -1,7 +1,9 @@
-## Setting up Artifact Registry
-Now that we’ve configured our project to handle connecting the developers local environment into the project via IAP through to the database, they should be able to run the application locally while actively developing the application.
+# Accessing database from Cloud Run
 
-However, if they want to deploy the application into the cloud, say into a test environment, then there are more steps we need to take.  For this, we are assuming that the application is containerized and the reader is familiar with docker, so we won’t be adding the steps to create a container.
+Since Cloud Run doesn't run within your VPC, as of today, then it cannot see a database with only a private IP address.  Fortunately, Google has provided a VPC Connector that can help Functions and Cloud Run to connect to resources within your VPC.  Here we will set up the required services needed to successfuly launch a Cloud Run funtion that can access the database with only a private IP address.
+
+## Setting up Artifact Registry
+> NOTE: For this, we are assuming that the application is containerized and the reader is familiar with docker.  We do have a basic command to create a container but that's as far as we go.
 
 The first step is to set up Artifact Registry.  This is the Google managed container registry which we can use to deploy the container to Cloud Run.
 
@@ -24,9 +26,8 @@ export TAG=dev
 docker build --tag=us-central1-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$TAG --file=Dockerfile .
 docker push us-central1-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$TAG
 ```
-
-## Setting up Cloud Run
-Now that we have our container in Artifact Registry, we can use it to create an instance of Cloud Run that will server our application.  The first thing we need to think about is networking.  Since Cloud Run is a managed service, it does not run within our VPC, yet.  That means we need to think about how to connect our Cloud Run instances to our VPC.  Fortunately, Google has provided the Serverless VPC Connector to handle this.  Let’s start by creating one.
+## Setting up VPC Connector
+Before we create our Cloud Run function, we'll need to create the VPC Connector that will allow Cloud Run to access our VPC.
 
 ```bash
 export CONNECTOR=my-connector
@@ -37,7 +38,12 @@ gcloud compute networks vpc-access connectors create $CONNECTOR \
 --min-instances=2 \
 --max-instances=10 \
 --machine-type=e2-micro
+```
 
+## Setting up Cloud Run
+The last thing we need to do is to deploy the service to Cloud Run passing in the location and credentials for the database and the VPC Connector we just created.
+
+```bash
 export DBHOST=$(gcloud sql instances describe $CLOUD_SQL --format "value(ipAddresses[0].ipAddress)")
 export DBNAME=[database]
 export DBUSER=[user]
